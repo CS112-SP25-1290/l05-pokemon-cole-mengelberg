@@ -44,10 +44,14 @@ class Main {
 				String type2 = keyboard.nextLine();
 				type2 = (type2.equalsIgnoreCase("none")) ? null : type2;
 
-				Pokemon p = new Pokemon(name, type1, type2);
-				myBox.add(p); //could throw exception here and skip rest of code
+				try {
+					Pokemon p = new Pokemon(name, type1, type2);
+					myBox.add(p); //could throw exception here and skip rest of code
 
-				System.out.println("\n" + name + " added!");
+					System.out.println("\n" + name + " added!");
+				} catch (IllegalArgumentException iae) {
+					System.out.println("Invalid name, type #1, and/or type #2 entered. Please try again.");
+				}
 			} else if (choice == 2) {
 				System.out.println(myBox);
 			} else if (choice == 3) {

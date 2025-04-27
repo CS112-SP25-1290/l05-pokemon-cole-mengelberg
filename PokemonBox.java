@@ -8,10 +8,9 @@ public class PokemonBox {
 	private int numCaught;
 
 	// CONSTRUCTORS
-	public PokemonBox(Pokemon[] caught) {
+	public PokemonBox(Pokemon[] caught) throws IllegalArgumentException{
 		if(caught == null || caught.length == 0) {
-			System.out.println("ERROR: Invalid Pokemon array provided to PokemonBox. Exiting program.");
-			System.exit(0);
+			throw new IllegalArgumentException("ERROR: Invalid Pokemon array provided to PokemonBox. Exiting program.");
 		}
 		this.numCaught = caught.length;
 		this.caught = this.deepCopyArray(caught, this.numCaught*2);
@@ -39,8 +38,12 @@ public class PokemonBox {
 		return location;
 	}
 
-	public Pokemon getPokemon(int location) {
-		return this.caught[location];
+	public Pokemon getPokemon(int location) throws IndexOutOfBoundsException{
+		if(location < 0 || location>= this.numCaught) {
+			throw new IndexOutOfBoundsException("Location provided is <0 or >= number of unique Pokemon in box.");
+		} else {
+			return this.caught[location];
+		}
 	}
 
 	public int getNumCaught() {
@@ -65,10 +68,15 @@ public class PokemonBox {
 		}
 
 		//then add new caught pokemon
-		this.caught[this.numCaught] = new Pokemon(newPoke);
-		this.numCaught++;
+		try {
+			this.caught[this.numCaught] = new Pokemon(newPoke);
+			this.numCaught++;
+		} catch(IllegalArgumentException iae) {
+			System.out.println("ERROR: trying to copy null Pokemon in PokemonBox");
+			System.exit(0);
+		}
 	}
-	
+
 	// OTHER REQUIRED METHODS
 	public String toString() {
 		if(this.isEmpty()) {
@@ -86,9 +94,14 @@ public class PokemonBox {
 
 	private Pokemon[] deepCopyArray(Pokemon[] p, int newLength) {
 		Pokemon[] deepCopy = new Pokemon[newLength];
-		
+
 		for(int i = 0; i < p.length; i++) {
-			deepCopy[i] = new Pokemon(p[i]);
+			try {
+				deepCopy[i] = new Pokemon(p[i]);
+			} catch (IllegalArgumentException iae) {
+				System.out.println("ERROR: trying to copy null while deep copying array.");
+				System.exit(0);
+			}
 		}
 
 		return deepCopy;
