@@ -59,21 +59,26 @@ public class PokemonBox {
 	}
 
 	// MUTATOR/SETTER METHODS
-	public void add(Pokemon newPoke) {
-		//new pokemon,  add to partially filled array
-		//but first check if box is full
-		if(this.numCaught == this.caught.length) {
-			//if full, then grow array *2 and copy contents over
-			this.caught = this.deepCopyArray(this.caught, this.numCaught*2);
-		}
+	public void add(Pokemon newPoke) throws PokemonAlreadyExistsException{
+		//if pokemon exists, throw error
+		if( this.hasPokemon(newPoke.getName()) ) {
+			throw new PokemonAlreadyExistsException();
+		} else {
+			//new pokemon,  add to partially filled array
+			//but first check if box is full
+			if (this.numCaught == this.caught.length) {
+				//if full, then grow array *2 and copy contents over
+				this.caught = this.deepCopyArray(this.caught, this.numCaught * 2);
+			}
 
-		//then add new caught pokemon
-		try {
-			this.caught[this.numCaught] = new Pokemon(newPoke);
-			this.numCaught++;
-		} catch(IllegalArgumentException iae) {
-			System.out.println("ERROR: trying to copy null Pokemon in PokemonBox");
-			System.exit(0);
+			//then add new caught pokemon
+			try {
+				this.caught[this.numCaught] = new Pokemon(newPoke);
+				this.numCaught++;
+			} catch (IllegalArgumentException iae) {
+				System.out.println("ERROR: trying to copy null Pokemon in PokemonBox");
+				System.exit(0);
+			}
 		}
 	}
 
